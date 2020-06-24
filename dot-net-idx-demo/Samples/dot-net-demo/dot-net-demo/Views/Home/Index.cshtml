@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>SDK Demo Home Page</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="assets/images/favicon-lr.png" type="image/x-icon">
+
+    <link href="/css/style.css" rel="stylesheet" />
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/options.js"></script>
+</head>
+<body>
+    <div class="section-menu">
+        <div class="menu-header">
+            <a href="/">
+                <img src="/images/lr-logo.png" />
+            </a>
+            <span style="display:block">Dot net SDK-IDX Demo</span>
+        </div>
+        <div class="vertical-menu">
+            <a href="#login" class="menu-options" id="menu-login">Login</a>
+            <a href="#signup" class="menu-options" id="menu-signup">Register</a>
+            <a href="#forgotpassword" class="menu-options" id="menu-forgotpassword">Forgot Password</a>
+        </div>
+    </div>
+    <div class="section-main">
+        <div id="messages" class="messages"></div>
+        <div class="right-elem login-elem">
+            <h3>Login</h3>
+            <div class="container">
+
+
+                <p>
+                    Clicking on Login button will redirect the user to the LoginRadius IDX with action as <b>"login"</b>.</br>
+                    For more reference please refer to <a href="https://www.loginradius.com/docs/authentication/quick-start/standard-login/#partdeployment2">this.</a>
+                </p>
+
+                <div id="login"></div>
+            </div>
+        </div>
+        <div class="right-elem signup-elem">
+            <h3>Register</h3>
+            <div class="container">
+                <p>
+                    Clicking on Register button will redirect the user to the LoginRadius IDX with action as <b>"Register"</b>.</br>
+
+                    For more reference please refer to <a href="https://www.loginradius.com/docs/authentication/quick-start/standard-login/#partdeployment2">this.</a>
+                </p>
+
+                <div id="register"></div>
+
+            </div>
+        </div>
+        <div class="right-elem forgotpassword-elem">
+            <h3>Forgot Password</h3>
+            <div class="container">
+                <p>
+                    Clicking on Forgot Password button will redirect the user to the LoginRadius IDX with action as <b>"forgotpassword"</b>.</br>
+                    For more reference please refer to <a href="https://www.loginradius.com/docs/authentication/quick-start/standard-login/#partdeployment2">this.</a>
+                </p>
+
+                <div id="forgotpassword"></div>
+            </div>
+        </div>
+        <div class="footer">
+            <p class="copyright-policy">  ©Copyright 2020 LoginRadius Inc.</p>
+        </div>
+    </div>
+    <script src="/js/indexView.js"></script>
+    <script src="/js/index.js"></script>
+
+
+    <script type="text/javascript">
+
+        function Login_html() {
+            let loginUrl = 'https://' + commonOptions.appName + '.hub.loginradius.com/auth.aspx?action=login&return_url=' + domainName + '';
+
+            $("#login").prepend("<a href =" + loginUrl + "> <div class='index-button' >Login</div> </a>");
+        }
+
+        function Register_html() {
+            let loginUrl = 'https://' + commonOptions.appName + '.hub.loginradius.com/auth.aspx?action=register&return_url=' + domainName + '';
+
+            $("#register").prepend("<a href =" + loginUrl + "> <div class='index-button' >Register</div> </a>");
+        }
+        function Forgot_html() {
+            let loginUrl = 'https://' + commonOptions.appName + '.hub.loginradius.com/auth.aspx?action=forgotpassword&return_url=' + domainName + '';
+
+            $("#forgotpassword").prepend("<a href =" + loginUrl + "> <div class='index-button' >Forgot Password</div> </a>");
+        }
+
+        Login_html();
+        Register_html();
+        Forgot_html();
+
+    </script>
+</body>
+
+</html>
