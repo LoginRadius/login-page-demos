@@ -1,4 +1,4 @@
-# login-page-demos
+# LoginRadius Login Page (Identity Experience Framework) Demos
 
 
 ## About 
