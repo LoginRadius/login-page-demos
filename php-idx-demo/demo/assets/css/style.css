@@ -215,46 +215,6 @@ hr {
 
 /*==============================================================*/
 
-.lr-ls-icon {
-    display: inline-block;
-    width: 43px;
-    height: 40px;
-    background-image:url("../icons/icon-sprite-32.png");
-    border-radius: 5px;
-    /*default*/
-    background-position: 0px 0px;
-    background-color: lightgray;
-}
-
-.lr-ls-icon-Twitter {
-    background-position: 0px 9.6%;
-    background-color: #35A8FF;
-}
-
-.lr-ls-icon-Facebook {
-    background-position: 0px 2.45%;
-    background-color: #3b5998;
-}
-
-.lr-ls-icon-LinkedIn {
-    background-position: 0px 7.2%;
-    background-color: #007bb6;
-}
-
-.lr-ls-icon-Google {
-    background-position: 0px 4.8%;
-    background-color: #dd4b39;
-}
-
-.lr-ls-icon-Instagram {
-    background-position: 0px 28.65%;
-    background-color: #406e94;
-}
-
-.lr-ls-icon-Vkontakte {
-   background-position: 0px 73.9%;
-   background-color: #5B88BD
-}
 .lr-image-frame {
     display: inline-block;
     width: 150px;
