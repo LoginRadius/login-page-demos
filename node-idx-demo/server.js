@@ -1,6 +1,6 @@
 /*  Config variable  */
 var config = {
-  apiDomain: 'https://api.loginradius.com',
+  apiDomain: 'api.loginradius.com',
   apiKey: '<LoginRadius API key>',
   apiSecret: '<LoginRadius API secret>',
   siteName: '<LoginRadius App name>',
