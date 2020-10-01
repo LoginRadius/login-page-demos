@@ -1,0 +1,12 @@
+
+# Ignore application configuration
+/config/application.yml
+
+# bundler state
+/.bundle
+/vendor/bundle/
+
+# minimal Rails specific artifacts
+db/*.sqlite3
+/log/*
+/tmp/*
