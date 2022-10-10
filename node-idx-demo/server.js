@@ -1,6 +1,6 @@
 /*  Config variable  */
 var config = {
-  apiDomain: 'https://api.loginradius.com',
+  apiDomain: 'api.loginradius.com',
   apiKey: '<LoginRadius API key>',
   apiSecret: '<LoginRadius API secret>',
   siteName: '<LoginRadius App name>',
@@ -123,7 +123,7 @@ app.post('/ajax_handler/profile', function (req, res) {
   }
 });
 
-app.post('/ajax_handler/login', function (req, res) {
+app.post('/demo/ajax_handler/login', function (req, res) {
   var action = req.body.action ? req.body.action : '';
   var output = {};
   output.status = 'error';
@@ -134,7 +134,10 @@ app.post('/ajax_handler/login', function (req, res) {
       output.message = 'Token is required';
     } else {
       var fields = '';
-      lrObj.authenticationApi.getProfileByAccessToken(token, fields).then(function (response) {
+      var emailTemplate =''; 
+      var verificationUrl = ''; 
+      var welcomeEmailTemplate = ''; 
+      lrObj.authenticationApi.getProfileByAccessToken(token, emailTemplate, fields, verificationUrl, welcomeEmailTemplate).then(function (response) {
         if ((response.Uid && response.Uid != '')) {
           output.data = response;
           output.message = 'Profile fetched';

@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using Newtonsoft.Json;
+using LoginRadiusSDK.V2.Models.Enums;
 namespace LoginRadiusSDK.V2.Models.RequestModels
 
 {
@@ -15,6 +16,12 @@ namespace LoginRadiusSDK.V2.Models.RequestModels
     /// </summary>
     public class ExternalIds
     {
+		/// <summary>
+		///	Languages operation Type
+		/// </summary>
+		[JsonProperty(PropertyName = "Op")]
+        public  OperationType? Op {get;set;}
+
 		/// <summary>
 		///	ExternalId source
 		/// </summary>

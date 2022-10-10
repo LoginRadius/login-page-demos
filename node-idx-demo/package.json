@@ -1,6 +1,6 @@
 {
   "name": "nodeJsDemo",
-  "version": "10.0.0-demo",
+  "version": "11.4.0-demo",
   "keywords": [
     "util",
     "functional",
@@ -13,7 +13,7 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
-    "loginradius-sdk": "10.0.0",
+    "loginradius-sdk": "^11.4.0",
     "request": "^2.12.0"
   }
 }

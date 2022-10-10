@@ -1,7 +1,9 @@
-PATH
-  remote: vendor/gems/login_radius
+GIT
+  remote: https://github.com/mimemagicrb/mimemagic.git
+  revision: 01f92d86d15d85cfd0f20dabd025dcbd36a8a60f
+  ref: 01f92d86d15d85cfd0f20dabd025dcbd36a8a60f
   specs:
-    login_radius (10.0.0)
+    mimemagic (0.3.5)
 
 GEM
   remote: https://rubygems.org/
@@ -90,6 +92,7 @@ GEM
       concurrent-ruby (~> 1.0)
     jbuilder (2.9.1)
       activesupport (>= 4.2.0)
+    login_radius (11.4.0)
     loofah (2.4.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -98,7 +101,6 @@ GEM
     marcel (0.3.3)
       mimemagic (~> 0.3.2)
     method_source (0.9.2)
-    mimemagic (0.3.3)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
     minitest (5.13.0)
@@ -199,7 +201,8 @@ DEPENDENCIES
   capybara (>= 2.15)
   figaro
   jbuilder (~> 2.7)
-  login_radius!
+  login_radius (~> 11.4.0)
+  mimemagic!
   puma (~> 4.3.1)
   rails (~> 6.0.1)
   sass-rails (>= 6)
@@ -209,7 +212,7 @@ DEPENDENCIES
   webdrivers
 
 RUBY VERSION
-   ruby 2.6.6p146
+   ruby 2.6.10p210
 
 BUNDLED WITH
    2.0.2

@@ -31,7 +31,7 @@ class AuthenticationApi:
         query_parameters["email"] = email
 
         resource_path = "identity/v2/auth/securityquestion/email"
-        return self._lr_object.execute("GET", resource_path, query_parameters, None)
+        return self._lr_object.execute("GET", resource_path, query_parameters, {})
 
     def get_security_questions_by_user_name(self, user_name):
         """This API is used to retrieve the list of questions that are configured on the respective LoginRadius site.
@@ -52,7 +52,7 @@ class AuthenticationApi:
         query_parameters["userName"] = user_name
 
         resource_path = "identity/v2/auth/securityquestion/username"
-        return self._lr_object.execute("GET", resource_path, query_parameters, None)
+        return self._lr_object.execute("GET", resource_path, query_parameters, {})
 
     def get_security_questions_by_phone(self, phone):
         """This API is used to retrieve the list of questions that are configured on the respective LoginRadius site.
@@ -73,7 +73,7 @@ class AuthenticationApi:
         query_parameters["phone"] = phone
 
         resource_path = "identity/v2/auth/securityquestion/phone"
-        return self._lr_object.execute("GET", resource_path, query_parameters, None)
+        return self._lr_object.execute("GET", resource_path, query_parameters, {})
 
     def get_security_questions_by_access_token(self, access_token):
         """This API is used to retrieve the list of questions that are configured on the respective LoginRadius site.
@@ -94,7 +94,7 @@ class AuthenticationApi:
         query_parameters["apiKey"] = self._lr_object.get_api_key()
 
         resource_path = "identity/v2/auth/securityquestion/accesstoken"
-        return self._lr_object.execute("GET", resource_path, query_parameters, None)
+        return self._lr_object.execute("GET", resource_path, query_parameters, {})
 
     def auth_validate_access_token(self, access_token):
         """This api validates access token, if valid then returns a response with its expiry otherwise error.
@@ -115,14 +115,14 @@ class AuthenticationApi:
         query_parameters["apiKey"] = self._lr_object.get_api_key()
 
         resource_path = "identity/v2/auth/access_token/validate"
-        return self._lr_object.execute("GET", resource_path, query_parameters, None)
+        return self._lr_object.execute("GET", resource_path, query_parameters, {})
 
     def auth_in_validate_access_token(self, access_token, prevent_refresh=False):
         """This api call invalidates the active access token or expires an access token's validity.
         
         Args:
             access_token: Uniquely generated identifier key by LoginRadius that is activated after successful authentication.
-            prevent_refresh: Boolean value that when set as true, in addition of the access_token being invalidated, it will no longer have the capability of being refreshed.
+            prevent_refresh: Boolean value that when set as true, in addition of the access token being invalidated, it will no longer have the capability of being refreshed.
 		
         Returns:
             Response containing Definition of Complete Validation data
@@ -139,7 +139,7 @@ class AuthenticationApi:
             query_parameters["preventRefresh"] = prevent_refresh
 
         resource_path = "identity/v2/auth/access_token/invalidate"
-        return self._lr_object.execute("GET", resource_path, query_parameters, None)
+        return self._lr_object.execute("GET", resource_path, query_parameters, {})
 
     def get_access_token_info(self, access_token):
         """This api call provide the active access token Information
@@ -160,14 +160,18 @@ class AuthenticationApi:
         query_parameters["apiKey"] = self._lr_object.get_api_key()
 
         resource_path = "identity/v2/auth/access_token"
-        return self._lr_object.execute("GET", resource_path, query_parameters, None)
+        return self._lr_object.execute("GET", resource_path, query_parameters, {})
 
-    def get_profile_by_access_token(self, access_token, fields=''):
-        """This API retrieves a copy of the user data based on the access_token.
+    def get_profile_by_access_token(self, access_token, fields='', email_template=None,
+        verification_url=None, welcome_email_template=None):
+        """This API retrieves a copy of the user data based on the access token.
         
         Args:
             access_token: Uniquely generated identifier key by LoginRadius that is activated after successful authentication.
             fields: The fields parameter filters the API response so that the response only includes a specific set of fields
+            email_template: 
+            verification_url: 
+            welcome_email_template: 
 		
         Returns:
             Response containing Definition for Complete profile data
@@ -180,11 +184,17 @@ class AuthenticationApi:
         query_parameters = {}
         query_parameters["access_token"] = access_token
         query_parameters["apiKey"] = self._lr_object.get_api_key()
+        if(not self._lr_object.is_null_or_whitespace(email_template)):
+            query_parameters["emailTemplate"] = email_template
         if(not self._lr_object.is_null_or_whitespace(fields)):
             query_parameters["fields"] = fields
+        if(not self._lr_object.is_null_or_whitespace(verification_url)):
+            query_parameters["verificationUrl"] = verification_url
+        if(not self._lr_object.is_null_or_whitespace(welcome_email_template)):
+            query_parameters["welcomeEmailTemplate"] = welcome_email_template
 
         resource_path = "identity/v2/auth/account"
-        return self._lr_object.execute("GET", resource_path, query_parameters, None)
+        return self._lr_object.execute("GET", resource_path, query_parameters, {})
 
     def send_welcome_email(self, access_token, welcome_email_template=None):
         """This API sends a welcome email
@@ -208,11 +218,11 @@ class AuthenticationApi:
             query_parameters["welcomeEmailTemplate"] = welcome_email_template
 
         resource_path = "identity/v2/auth/account/sendwelcomeemail"
-        return self._lr_object.execute("GET", resource_path, query_parameters, None)
+        return self._lr_object.execute("GET", resource_path, query_parameters, {})
 
     def update_profile_by_access_token(self, access_token, user_profile_update_model, email_template=None,
         fields='', null_support=None, sms_template=None, verification_url=None):
-        """This API is used to update the user's profile by passing the access_token.
+        """This API is used to update the user's profile by passing the access token.
         
         Args:
             access_token: Uniquely generated identifier key by LoginRadius that is activated after successful authentication.
@@ -275,7 +285,7 @@ class AuthenticationApi:
             query_parameters["emailTemplate"] = email_template
 
         resource_path = "identity/v2/auth/account"
-        return self._lr_object.execute("DELETE", resource_path, query_parameters, None)
+        return self._lr_object.execute("DELETE", resource_path, query_parameters, {})
 
     def delete_account_by_delete_token(self, deletetoken):
         """This API is used to delete an account by passing it a delete token.
@@ -296,10 +306,10 @@ class AuthenticationApi:
         query_parameters["deletetoken"] = deletetoken
 
         resource_path = "identity/v2/auth/account/delete"
-        return self._lr_object.execute("GET", resource_path, query_parameters, None)
+        return self._lr_object.execute("GET", resource_path, query_parameters, {})
 
     def unlock_account_by_token(self, access_token, unlock_profile_model):
-        """This API is used to allow a customer with a valid access_token to unlock their account provided that they successfully pass the prompted Bot Protection challenges. The Block or Suspend block types are not applicable for this API. For additional details see our Auth Security Configuration documentation.You are only required to pass the Post Parameters that correspond to the prompted challenges.
+        """This API is used to allow a customer with a valid access token to unlock their account provided that they successfully pass the prompted Bot Protection challenges. The Block or Suspend block types are not applicable for this API. For additional details see our Auth Security Configuration documentation.You are only required to pass the Post Parameters that correspond to the prompted challenges.
         
         Args:
             access_token: Uniquely generated identifier key by LoginRadius that is activated after successful authentication.
@@ -322,6 +332,40 @@ class AuthenticationApi:
         resource_path = "identity/v2/auth/account/unlock"
         return self._lr_object.execute("PUT", resource_path, query_parameters, unlock_profile_model)
 
+    def get_profile_by_ping(self, client_guid, email_template=None, fields='',
+        verification_url=None, welcome_email_template=None):
+        """This API is used to get a user's profile using the clientGuid parameter if no callback feature enabled
+        
+        Args:
+            client_guid: ClientGuid
+            email_template: EmailTemplate
+            fields: Fields
+            verification_url: VerificationUrl
+            welcome_email_template: WelcomeEmailTemplate
+		
+        Returns:
+            Response containing User Profile Data and access token
+        5.16
+        """
+
+        if(self._lr_object.is_null_or_whitespace(client_guid)):
+            raise Exception(self._lr_object.get_validation_message("client_guid"))
+
+        query_parameters = {}
+        query_parameters["apiKey"] = self._lr_object.get_api_key()
+        query_parameters["clientGuid"] = client_guid
+        if(not self._lr_object.is_null_or_whitespace(email_template)):
+            query_parameters["emailTemplate"] = email_template
+        if(not self._lr_object.is_null_or_whitespace(fields)):
+            query_parameters["fields"] = fields
+        if(not self._lr_object.is_null_or_whitespace(verification_url)):
+            query_parameters["verificationUrl"] = verification_url
+        if(not self._lr_object.is_null_or_whitespace(welcome_email_template)):
+            query_parameters["welcomeEmailTemplate"] = welcome_email_template
+
+        resource_path = "identity/v2/auth/account/ping"
+        return self._lr_object.execute("GET", resource_path, query_parameters, {})
+
     def check_email_availability(self, email):
         """This API is used to check the email exists or not on your site.
         
@@ -341,7 +385,7 @@ class AuthenticationApi:
         query_parameters["email"] = email
 
         resource_path = "identity/v2/auth/email"
-        return self._lr_object.execute("GET", resource_path, query_parameters, None)
+        return self._lr_object.execute("GET", resource_path, query_parameters, {})
 
     def verify_email(self, verification_token, fields='', url=None,
         welcome_email_template=None):
@@ -372,7 +416,7 @@ class AuthenticationApi:
             query_parameters["welcomeEmailTemplate"] = welcome_email_template
 
         resource_path = "identity/v2/auth/email"
-        return self._lr_object.execute("GET", resource_path, query_parameters, None)
+        return self._lr_object.execute("GET", resource_path, query_parameters, {})
 
     def verify_email_by_otp(self, email_verification_by_otp_model, fields='', url=None,
         welcome_email_template=None):
@@ -713,34 +757,6 @@ class AuthenticationApi:
         resource_path = "identity/v2/auth/password/change"
         return self._lr_object.execute("PUT", resource_path, query_parameters, body_parameters)
 
-    def link_social_identities(self, access_token, candidate_token):
-        """This API is used to link up a social provider account with the specified account based on the access token and the social providers user access token.
-        
-        Args:
-            access_token: Access_Token
-            candidate_token: Access token of the account to be linked
-		
-        Returns:
-            Response containing Definition of Complete Validation data
-        12.1
-        """
-
-        if(self._lr_object.is_null_or_whitespace(access_token)):
-            raise Exception(self._lr_object.get_validation_message("access_token"))
-
-        if(self._lr_object.is_null_or_whitespace(candidate_token)):
-            raise Exception(self._lr_object.get_validation_message("candidate_token"))
-
-        query_parameters = {}
-        query_parameters["access_token"] = access_token
-        query_parameters["apiKey"] = self._lr_object.get_api_key()
-
-        body_parameters = {}
-        body_parameters["candidateToken"] = candidate_token
-
-        resource_path = "identity/v2/auth/socialidentity"
-        return self._lr_object.execute("PUT", resource_path, query_parameters, body_parameters)
-
     def unlink_social_identities(self, access_token, provider, provider_id):
         """This API is used to unlink up a social provider account with the specified account based on the access token and the social providers user access token. The unlinked account will automatically get removed from your database.
         
@@ -774,29 +790,61 @@ class AuthenticationApi:
         resource_path = "identity/v2/auth/socialidentity"
         return self._lr_object.execute("DELETE", resource_path, query_parameters, body_parameters)
 
-    def get_social_identity(self, access_token, fields=''):
-        """This API is called just after account linking API and it prevents the raas profile of the second account from getting created.
+    def link_social_identities(self, access_token, candidate_token):
+        """This API is used to link up a social provider account with an existing LoginRadius account on the basis of access token and the social providers user access token.
         
         Args:
             access_token: Uniquely generated identifier key by LoginRadius that is activated after successful authentication.
-            fields: The fields parameter filters the API response so that the response only includes a specific set of fields
+            candidate_token: Access token of the account to be linked
 		
         Returns:
-            Response containing Definition for Complete SocialUserProfile data
-        12.3
+            Response containing Definition of Complete Validation data
+        12.4
         """
 
         if(self._lr_object.is_null_or_whitespace(access_token)):
             raise Exception(self._lr_object.get_validation_message("access_token"))
 
+        if(self._lr_object.is_null_or_whitespace(candidate_token)):
+            raise Exception(self._lr_object.get_validation_message("candidate_token"))
+
         query_parameters = {}
         query_parameters["access_token"] = access_token
         query_parameters["apiKey"] = self._lr_object.get_api_key()
-        if(not self._lr_object.is_null_or_whitespace(fields)):
-            query_parameters["fields"] = fields
+
+        body_parameters = {}
+        body_parameters["candidateToken"] = candidate_token
 
         resource_path = "identity/v2/auth/socialidentity"
-        return self._lr_object.execute("GET", resource_path, query_parameters, None)
+        return self._lr_object.execute("POST", resource_path, query_parameters, body_parameters)
+
+    def link_social_identities_by_ping(self, access_token, client_guid):
+        """This API is used to link up a social provider account with an existing LoginRadius account on the basis of ping and the social providers user access token.
+        
+        Args:
+            access_token: Uniquely generated identifier key by LoginRadius that is activated after successful authentication.
+            client_guid: Unique ID generated by client
+		
+        Returns:
+            Response containing Definition of Complete Validation data
+        12.5
+        """
+
+        if(self._lr_object.is_null_or_whitespace(access_token)):
+            raise Exception(self._lr_object.get_validation_message("access_token"))
+
+        if(self._lr_object.is_null_or_whitespace(client_guid)):
+            raise Exception(self._lr_object.get_validation_message("client_guid"))
+
+        query_parameters = {}
+        query_parameters["access_token"] = access_token
+        query_parameters["apiKey"] = self._lr_object.get_api_key()
+
+        body_parameters = {}
+        body_parameters["clientGuid"] = client_guid
+
+        resource_path = "identity/v2/auth/socialidentity"
+        return self._lr_object.execute("POST", resource_path, query_parameters, body_parameters)
 
     def set_or_change_user_name(self, access_token, username):
         """This API is used to set or change UserName by access token.
@@ -845,10 +893,10 @@ class AuthenticationApi:
         query_parameters["username"] = username
 
         resource_path = "identity/v2/auth/username"
-        return self._lr_object.execute("GET", resource_path, query_parameters, None)
+        return self._lr_object.execute("GET", resource_path, query_parameters, {})
 
     def accept_privacy_policy(self, access_token, fields=''):
-        """This API is used to update the privacy policy stored in the user's profile by providing the access_token of the user accepting the privacy policy
+        """This API is used to update the privacy policy stored in the user's profile by providing the access token of the user accepting the privacy policy
         
         Args:
             access_token: Uniquely generated identifier key by LoginRadius that is activated after successful authentication.
@@ -869,10 +917,10 @@ class AuthenticationApi:
             query_parameters["fields"] = fields
 
         resource_path = "identity/v2/auth/privacypolicy/accept"
-        return self._lr_object.execute("GET", resource_path, query_parameters, None)
+        return self._lr_object.execute("GET", resource_path, query_parameters, {})
 
     def get_privacy_policy_history_by_access_token(self, access_token):
-        """This API will return all the accepted privacy policies for the user by providing the access_token of that user.
+        """This API will return all the accepted privacy policies for the user by providing the access token of that user.
         
         Args:
             access_token: Uniquely generated identifier key by LoginRadius that is activated after successful authentication.
@@ -890,7 +938,7 @@ class AuthenticationApi:
         query_parameters["apiKey"] = self._lr_object.get_api_key()
 
         resource_path = "identity/v2/auth/privacypolicy/history"
-        return self._lr_object.execute("GET", resource_path, query_parameters, None)
+        return self._lr_object.execute("GET", resource_path, query_parameters, {})
 
     def user_registration_by_email(self, auth_user_registration_model, sott, email_template=None,
         fields='', options='', verification_url=None, welcome_email_template=None):

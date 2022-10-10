@@ -259,7 +259,7 @@ class PhoneAuthenticationAPI extends Functions
 
 
     /**
-     * This API is used to delete the Phone ID on a user's account via the access_token
+     * This API is used to delete the Phone ID on a user's account via the access token
      * @param accessToken Uniquely generated identifier key by LoginRadius that is activated after successful authentication.
      * @return Response containing Definition of Delete Request
      * 11.7
@@ -294,7 +294,7 @@ class PhoneAuthenticationAPI extends Functions
 
     public function userRegistrationByPhone($authUserRegistrationModel, $sott,
         $fields = "", $options = "", $smsTemplate = null,
-        $verificationUrl = null, $welcomeEmailTemplate = null)
+        $verificationUrl = null, $welcomeEmailTemplate = null,$emailTemplate = null)
     {
         $resourcePath = "/identity/v2/auth/register";
         $queryParam = [];
@@ -310,6 +310,9 @@ class PhoneAuthenticationAPI extends Functions
         }
         if ($smsTemplate != '') {
             $queryParam['smsTemplate'] = $smsTemplate;
+        }
+        if ($emailTemplate != '') {
+            $queryParam['emailTemplate'] = $emailTemplate;
         }
         if ($verificationUrl != '') {
             $queryParam['verificationUrl'] = $verificationUrl;

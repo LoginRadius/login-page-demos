@@ -23,7 +23,7 @@ class ReAuthenticationAPI extends Functions
 
 
     /**
-     * This API is used to trigger the Multi-Factor Autentication workflow for the provided access_token
+     * This API is used to trigger the Multi-Factor Autentication workflow for the provided access token
      * @param accessToken Uniquely generated identifier key by LoginRadius that is activated after successful authentication.
      * @param smsTemplate2FA SMS Template Name
      * @return Response containing Definition of Complete Multi-Factor Authentication Settings data
@@ -70,7 +70,7 @@ class ReAuthenticationAPI extends Functions
 
 
     /**
-     * This API is used to re-authenticate by set of backup codes via access_token on the site that has Multi-factor authentication enabled in re-authentication for the user that does not have the device
+     * This API is used to re-authenticate by set of backup codes via access token on the site that has Multi-factor authentication enabled in re-authentication for the user that does not have the device
      * @param accessToken Uniquely generated identifier key by LoginRadius that is activated after successful authentication.
      * @param reauthByBackupCodeModel Model Class containing Definition for MFA Reauthentication by Backup code
      * @return Complete user Multi-Factor Authentication Token data
@@ -220,6 +220,81 @@ class ReAuthenticationAPI extends Functions
         }
         $queryParam['access_token'] = $accessToken;
         return Functions::_apiClientHandler('PUT', $resourcePath, $queryParam, $pinAuthEventBasedAuthModelWithLockout);
+    }
+       
+
+
+    /**
+     * This API is used to validate the triggered MFA authentication flow with an Email OTP.
+     * @param accessToken Uniquely generated identifier key by LoginRadius that is activated after successful authentication.
+     * @param reauthByEmailOtpModel payload
+     * @return Response containing Definition response of MFA reauthentication
+     * 42.14
+    */
+
+    public function reAuthValidateEmailOtp($accessToken, $reauthByEmailOtpModel)
+    {
+        $resourcePath = "/identity/v2/auth/account/reauth/2fa/otp/email/verify";
+        $queryParam = [];
+        if ($accessToken === '' || ctype_space($accessToken)) {
+            throw new LoginRadiusException(Functions::paramValidationMsg('accessToken'));
+        }
+        $queryParam['apiKey'] = Functions::getApiKey();
+        $queryParam['access_token'] = $accessToken;
+        return Functions::_apiClientHandler('PUT', $resourcePath, $queryParam, $reauthByEmailOtpModel);
+    }
+       
+
+
+    /**
+     * This API is used to send the MFA Email OTP to the email for Re-authentication
+     * @param accessToken Uniquely generated identifier key by LoginRadius that is activated after successful authentication.
+     * @param emailId EmailId
+     * @param emailTemplate2FA EmailTemplate2FA
+     * @return Response containing Definition of Complete Validation data
+     * 42.15
+    */
+
+    public function reAuthSendEmailOtp($accessToken, $emailId,
+        $emailTemplate2FA = null)
+    {
+        $resourcePath = "/identity/v2/auth/account/reauth/2fa/otp/email";
+        $queryParam = [];
+        if ($accessToken === '' || ctype_space($accessToken)) {
+            throw new LoginRadiusException(Functions::paramValidationMsg('accessToken'));
+        }
+        $queryParam['apiKey'] = Functions::getApiKey();
+        if ($emailId === '' || ctype_space($emailId)) {
+            throw new LoginRadiusException(Functions::paramValidationMsg('emailId'));
+        }
+        if ($emailTemplate2FA != '') {
+            $queryParam['emailTemplate2FA'] = $emailTemplate2FA;
+        }
+        $queryParam['access_token'] = $accessToken;
+        $queryParam['emailId'] = $emailId;
+        return Functions::_apiClientHandler('GET', $resourcePath, $queryParam);
+    }
+       
+
+
+    /**
+     * This API is used to validate the triggered MFA re-authentication flow with security questions answers.
+     * @param accessToken Uniquely generated identifier key by LoginRadius that is activated after successful authentication.
+     * @param securityQuestionAnswerUpdateModel payload
+     * @return Response containing Definition response of MFA reauthentication
+     * 42.16
+    */
+
+    public function reAuthBySecurityQuestion($accessToken, $securityQuestionAnswerUpdateModel)
+    {
+        $resourcePath = "/identity/v2/auth/account/reauth/2fa/securityquestionanswer/verify";
+        $queryParam = [];
+        if ($accessToken === '' || ctype_space($accessToken)) {
+            throw new LoginRadiusException(Functions::paramValidationMsg('accessToken'));
+        }
+        $queryParam['apiKey'] = Functions::getApiKey();
+        $queryParam['access_token'] = $accessToken;
+        return Functions::_apiClientHandler('POST', $resourcePath, $queryParam, $securityQuestionAnswerUpdateModel);
     }
 
 }

@@ -6,32 +6,61 @@ using System.Text;
 using System.Globalization;
 using System.IO;
 using System.Security.Cryptography;
-
+using LoginRadiusSDK.V2.Api.Advanced;
 
 namespace LoginRadiusSDK.V2.Common
 {
-    public  class LoginRadiusSecureOneTimeToken
+    public class LoginRadiusSecureOneTimeToken
     {
-        public  string GetSott(Sott sottAuth)
+
+        /// <summary>
+        /// Generate SOTT Manually.
+        /// </summary>
+        /// <param name="sottAuth">Model Class containing Definition of payload for SOTT</param>
+        /// <param name="apiKey">LoginRadius Api Key.</param>
+        /// <param name="apiSecret">LoginRadius Api Secret.</param>
+        /// <returns>Response containing SOTT</returns>
+        /// 
+
+        public string GetSott(Sott sottAuth, string apiKey = "", string apiSecret = "", bool getLrServerTime=false)
         {
-            string secret = LoginRadiusResource.ConfigDictionary[LRConfigConstants.LoginRadiusApiSecret];
-            string key = LoginRadiusResource.ConfigDictionary[LRConfigConstants.LoginRadiusApiKey];
+
+            string secret = !string.IsNullOrWhiteSpace(apiSecret) ? apiSecret : LoginRadiusResource.ConfigDictionary[LRConfigConstants.LoginRadiusApiSecret];
+
+            string key = !string.IsNullOrWhiteSpace(apiKey) ? apiKey : LoginRadiusResource.ConfigDictionary[LRConfigConstants.LoginRadiusApiKey];
+
+            string timeDifference = !string.IsNullOrWhiteSpace(sottAuth.TimeDifference) ? sottAuth.TimeDifference : "10";
+            int time;
+            bool isParsable=Int32.TryParse(timeDifference, out time);
+
+            string tempToken;
+           
 
             if (!string.IsNullOrWhiteSpace(secret) && !string.IsNullOrWhiteSpace(key))
             {
-                string tempToken;
+                tempToken = DateTime.UtcNow.ToString("yyyy/M/d H:m:s", CultureInfo.InvariantCulture) + "#" + key +
+                                "#" +
+                                DateTime.UtcNow.AddMinutes(isParsable ? time : 10).ToString("yyyy/M/d H:m:s", CultureInfo.InvariantCulture);
 
-                if (sottAuth.StartTime != null && sottAuth.EndTime != null)
+               
+                if (!string.IsNullOrWhiteSpace(sottAuth.StartTime) && !string.IsNullOrWhiteSpace(sottAuth.EndTime))
                 {
                     tempToken =
                         $"{Convert.ToDateTime(sottAuth.StartTime).ToString("yyyy/M/d H:m:s", CultureInfo.InvariantCulture)}#{key}#{Convert.ToDateTime(sottAuth.EndTime).ToString("yyyy/M/d H:m:s", CultureInfo.InvariantCulture)}";
                 }
-                else
+                else if(getLrServerTime)
                 {
-                    tempToken = DateTime.UtcNow.ToString("yyyy/M/d H:m:s", CultureInfo.InvariantCulture) + "#" + key +
-                                "#" +
-                                DateTime.UtcNow.AddMinutes(10).ToString("yyyy/M/d H:m:s", CultureInfo.InvariantCulture);
+                    
+                    var apiResponse = new ConfigurationApi().GetServerInfo(isParsable ? time : 10).Result;
+                    if (apiResponse.RestException == null)
+                    {
+                        if(!string.IsNullOrWhiteSpace(apiResponse.Response.Sott.StartTime) && !string.IsNullOrWhiteSpace(apiResponse.Response.Sott.EndTime)){
+                            tempToken =
+                       $"{Convert.ToDateTime(apiResponse.Response.Sott.StartTime).ToString("yyyy/M/d H:m:s", CultureInfo.InvariantCulture)}#{key}#{Convert.ToDateTime(apiResponse.Response.Sott.EndTime).ToString("yyyy/M/d H:m:s", CultureInfo.InvariantCulture)}";
+                        }
+                    }
                 }
+
 
                 var token = Encrypt(tempToken, secret);
                 var hash = CreateMd5(token);
