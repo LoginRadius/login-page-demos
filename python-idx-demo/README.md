@@ -33,10 +33,13 @@ A demo with Python web application using the Python SDK and LoginRadius IDX fram
 
 1.Have Flask, requests, pbkdf2, cryptography installed:
 
-```pip install flask``` <br>
-```pip install requests``` <br>
-```pip install pbkdf2 ``` <br>
-```pip install cryptography ``` <br>
+```pip install -r Demo/requirements.txt``` <br>
+
+OR
+
+If you are in `Demo` folder
+
+```pip install requirements.txt``` <br>
 
 2.Fill in credentials in ```lr.py``` and ```static/js/options.js```
 
