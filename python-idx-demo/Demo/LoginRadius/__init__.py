@@ -9,7 +9,7 @@
 # premium or enterprise members only.           #
 # In which case, an exception will be raised.   #
 #################################################
-# Copyright 2019 LoginRadius Inc.               #
+# Copyright 2022 LoginRadius Inc.               #
 # - www.LoginRadius.com                         #
 #################################################
 # This file is part of the LoginRadius SDK      #
@@ -17,10 +17,10 @@
 #################################################
 
 __author__ = "LoginRadius"
-__copyright__ = "Copyright 2019, LoginRadius"
+__copyright__ = "Copyright 2022, LoginRadius"
 __email__ = "developers@loginradius.com"
 __status__ = "Production"
-__version__ = "10.0.1"
+__version__ = "11.4.0"
 
 import json
 import sys
@@ -66,6 +66,7 @@ from LoginRadius.api.social.social_api import SocialApi
 # exception
 from LoginRadius.exceptions import Exceptions
 
+
 class LoginRadius:
     """
     LoginRadius Class. Use this to obtain social data and other information
@@ -77,6 +78,7 @@ class LoginRadius:
     LIBRARY = None
     CUSTOM_DOMAIN = None
     API_REQUEST_SIGNING = False
+    ORIGIN_IP = None
     SERVER_REGION = None
     CONST_INITVECTOR = "tu89geji340t89u2"
     CONST_KEYSIZE = 256
@@ -87,11 +89,11 @@ class LoginRadius:
         :raise Exceptions.NoAPIKey: Raised if you did not set an API_KEY.
         :raise Exceptions.NoAPISecret: Raised if you did not set an API_SECRET.
         """
-		
+
         self.error = {}
         self.sociallogin_raw = False
         self.bs = 16
-        
+
         if not self.API_KEY:
             raise Exceptions.NoAPIKey
 
@@ -114,7 +116,7 @@ class LoginRadius:
 
         # Namedtuple for settings for each request and the api functions.
         self.settings = namedtuple(
-            "Settings", ['library', 'urllib', 'urllib2', 'json', 'requests'])
+            "Settings", ['library', 'urllib', 'urllib3', 'json', 'requests'])
 
         # We prefer to use requests with the updated urllib3 module.
         try:
@@ -128,7 +130,7 @@ class LoginRadius:
 
         # However, we can use urllib if there is no requests or it is outdated.
         except (ImportError, Exceptions.RequestsLibraryDated):
-            self._settings("urllib2")
+            self._settings("urllib3")
 
         self.authentication = AuthenticationApi(self)
         self.one_touch_login = OneTouchLoginApi(self)
@@ -138,26 +140,25 @@ class LoginRadius:
         self.phone_authentication = PhoneAuthenticationApi(self)
         self.pin_authentication = PINAuthenticationApi(self)
         self.consent_management = ConsentManagementApi(self)
-        
+
         self.account = AccountApi(self)
         self.role = RoleApi(self)
-        self.sott = SottApi(self)		
-		
+        self.sott = SottApi(self)
+
         self.custom_object = CustomObjectApi(self)
         self.custom_registration_data = CustomRegistrationDataApi(self)
         self.mfa = MultiFactorAuthenticationApi(self)
         self.configuration = ConfigurationApi(self)
         self.web_hook = WebHookApi(self)
         self.re_authentication = ReAuthenticationApi(self)
-		
+
         self.native_social = NativeSocialApi(self)
         self.social = SocialApi(self)
         if sys.version_info[0] < 3:
             from urllib import quote
-            self.quote = quote
         else:
             from urllib.parse import quote
-            self.quote = quote
+        self.quote = quote
 
     #
     # Internal private functions
@@ -165,36 +166,37 @@ class LoginRadius:
     def _settings(self, library):
         """This sets the name tuple settings to whatever library you want.
         You may change this as you wish."""
-        if LoginRadius.LIBRARY is not None:
+        if not self.is_null_or_whitespace(LoginRadius.LIBRARY):
             if LoginRadius.LIBRARY == "requests":
                 self._set_requests()
-            elif LoginRadius.LIBRARY == "urllib2":
-                self._set_urllib2()
+            elif LoginRadius.LIBRARY == "urllib3":
+                self._set_urllib3()
             else:
                 raise Exceptions.InvalidLibrary(LoginRadius.LIBRARY)
+        elif library == "requests":
+            self._set_requests()
+        elif library == "urllib3":
+            self._set_urllib3()
         else:
-            if library == "requests":
-                self._set_requests()
-            elif library == "urllib2":
-                self._set_urllib2()
-            else:
-                raise Exceptions.InvalidLibrary(library)
+            raise Exceptions.InvalidLibrary(library)
 
     def _set_requests(self):
         """Change to the requests library to use."""
+
         self.settings.library = "requests"
         self.settings.requests = import_module("requests")
-        self.settings.urllib2 = False
+        self.settings.urllib3 = False
 
-    def _set_urllib2(self):
-        """Change to the requests urllib2 library to use."""
+    def _set_urllib3(self):
+        """Change to the requests urllib3 library to use."""
         if sys.version_info[0] == 2:
-            self.settings.urllib2 = import_module("urllib2")
+            self.settings.urllib3 = import_module("urllib3")
             self.settings.urllib = import_module("urllib")
         else:
-            self.settings.urllib2 = import_module("urllib.request")
+            self.settings.urllib3 = import_module("urllib.request")
             self.settings.urllib = import_module("urllib.parse")
-        self.settings.library = "urllib2"
+
+        self.settings.library = "urllib3"
         self.settings.requests = False
         self.settings.json = import_module("json")
 
@@ -221,11 +223,12 @@ class LoginRadius:
         return base64.b64encode(dig)
 
     def execute(self, method, resource_url, query_params, payload):
+
         api_end_point = self.SECURE_API_URL + resource_url
 
         if resource_url == "ciam/appinfo":
             api_end_point = self.CONFIG_API_URL + resource_url
-        
+
         if self.SERVER_REGION is not None and self.SERVER_REGION != "":
             query_params['region'] = self.SERVER_REGION
 
@@ -248,6 +251,9 @@ class LoginRadius:
         if apiSecret and "/manage" in resource_url and not self.API_REQUEST_SIGNING:
             headers.update({"X-LoginRadius-ApiSecret": apiSecret})
 
+        if self.ORIGIN_IP is not None and self.ORIGIN_IP != "":
+            headers.update({"X-Origin-IP": self.ORIGIN_IP})
+
         api_end_point = api_end_point + "?"
         for key, value in query_params.items():
             api_end_point = api_end_point + key + "=" + str(value) + "&"
@@ -268,17 +274,17 @@ class LoginRadius:
         except IOError as e:
             return {
                 'ErrorCode': 105,
-                'Description': e.message
+                'Description': str(e)
             }
         except ValueError as e:
             return {
                 'ErrorCode': 102,
-                'Description': e.message
+                'Description': str(e)
             }
         except Exception as e:
             return {
                 'ErrorCode': 101,
-                'Description': e.message
+                'Description': str(e)
             }
 
     def _get_json(self, url, payload, HEADERS):
@@ -289,17 +295,27 @@ class LoginRadius:
         if self.settings.requests:
             r = self.settings.requests.get(
                 url, proxies=proxies, params=payload, headers=HEADERS)
-            return self._process_result(r.json())
+            if(r.status_code == 429):
+                return self.too_many_request_error()
+            else:
+                return self._process_result(r.json())
         else:
-            http = urllib3.PoolManager()
+            if len(proxies) != 0:
+                http = urllib3.ProxyManager(proxies['https'])
+            else:
+                http = urllib3.PoolManager()
+            
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
             r = http.request('GET', url, fields=payload, headers=HEADERS)
-            return json.loads(r.data.decode('utf-8'))
+            if(r.status == 429):
+                return self.too_many_request_error()
+            else:
+                return json.loads(r.data.decode('utf-8'))
 
     def __submit_json(self, method, url, payload, HEADERS):
+        proxies = self._get_proxy()
+        import json
         if self.settings.requests:
-            import json
-            proxies = self._get_proxy()
             if method == 'PUT':
                 r = self.settings.requests.put(
                     url, proxies=proxies, data=json.dumps(payload), headers=HEADERS)
@@ -309,28 +325,23 @@ class LoginRadius:
             else:
                 r = self.settings.requests.post(
                     url, proxies=proxies, data=json.dumps(payload), headers=HEADERS)
-            return self._process_result(r.json())
+
+            if(r.status_code == 429):
+                return self.too_many_request_error()
+            else:
+                return self._process_result(r.json())
 
         else:
-            import json
+            if len(proxies) != 0:
+                http = urllib3.ProxyManager(proxies['https'])
+            else:
+                http = urllib3.PoolManager()
             data = json.dumps(payload)
-            if sys.version_info[0] == 3:
-                data = data.encode('utf-8')
-
-            r = self.settings.urllib2.Request(
-                url, data, {'Content-Type': 'application/json', 'Accept-encoding': 'gzip'})
-            if method == 'PUT' or method == 'DELETE':
-                r.get_method = lambda: method
-            for key, value in HEADERS.items():
-                r.add_header(key, value)
-            try:
-                result = self.settings.urllib2.urlopen(r)
-            except self.settings.urllib2.HTTPError as e:
-                return json.loads(e.read())
-
-            import codecs
-            reader = codecs.getreader("utf-8")
-            return self._process_result(self.settings.json.load(reader(result)))
+            r = http.request(method,  url, headers=HEADERS, body=data)
+            if(r.status == 429):
+                return self.too_many_request_error()
+            else:
+                return json.loads(r.data.decode('utf-8'))
 
     def get_api_key(self):
         return self.API_KEY
@@ -350,6 +361,15 @@ class LoginRadius:
         return result
 
     #
+    # 429 error code handling for "Too Many Request in a particular time frame"
+    #
+    def too_many_request_error(self):
+        return {
+            'ErrorCode': 106,
+            'Description': "Too Many Request in a particular time frame"
+        }
+
+    #
     # Public functions
     #
     def change_library(self, library):
@@ -363,11 +383,36 @@ class LoginRadius:
 
     def get_validation_message(self, field):
         return "Invalid value for field " + str(field)
+
+    #
+    # Function to generate SOTT manually
+    #
+    def get_sott(self, timeDifference='', getLRserverTime=False, apiKey="", apiSecret="", startTime="", endTime=""):
     
-    def get_sott(self, time='10', getLRserverTime=False):
-        if getLRserverTime:
-            result = self.configuration.get_server_info()
-            print(result)
+        time = '10'
+        secret = self.API_SECRET
+        key = self.API_KEY
+
+        if(not self.is_null_or_whitespace(timeDifference)):
+            time = timeDifference
+
+        if(not self.is_null_or_whitespace(apiSecret)):
+            secret = apiSecret
+
+        if(not self.is_null_or_whitespace(apiKey)):
+            key = apiKey
+
+        now = datetime.utcnow()
+        now = now - timedelta(minutes=0)
+        now_plus_10m = now + timedelta(minutes=int(time))
+        now = now.strftime("%Y/%m/%d %I:%M:%S")
+        now_plus_10m = now_plus_10m.strftime("%Y/%m/%d %I:%M:%S")
+
+        if(not self.is_null_or_whitespace(startTime) and not self.is_null_or_whitespace(endTime)):
+            now = startTime
+            now_plus_10m = endTime
+        elif getLRserverTime:
+            result = self.configuration.get_server_info(time)
             if result.get('Sott') is not None:
                 Sott = result.get('Sott')
                 for timeKey, val in Sott.items():
@@ -375,21 +420,7 @@ class LoginRadius:
                         now = val
                     if timeKey == 'EndTime':
                         now_plus_10m = val
-            else:
-                now = datetime.utcnow()
-                now = now - timedelta(minutes=5)
-                now_plus_10m = now + timedelta(minutes=10)
-                now = now.strftime("%Y/%m/%d %I:%M:%S")
-                now_plus_10m = now_plus_10m.strftime("%Y/%m/%d %I:%M:%S")
-
-        else:
-            now = datetime.utcnow()
-            now = now - timedelta(minutes=5)
-            now_plus_10m = now + timedelta(minutes=10)
-            now = now.strftime("%Y/%m/%d %I:%M:%S")
-            now_plus_10m = now_plus_10m.strftime("%Y/%m/%d %I:%M:%S")
-
-        plaintext = now + "#" + self.API_KEY + "#" + now_plus_10m
+        plaintext = now + "#" + key + "#" + now_plus_10m
         padding = 16 - (len(plaintext) % 16)
         if sys.version_info[0] == 3:
             plaintext += (bytes([padding]) * padding).decode()
@@ -397,7 +428,7 @@ class LoginRadius:
             plaintext += (chr(padding) * padding).decode()
 
         salt = "\0\0\0\0\0\0\0\0"
-        cipher_key = PBKDF2(self.API_SECRET,
+        cipher_key = PBKDF2(secret,
                             salt, 10000).read(self.CONST_KEYSIZE // 8)
 
         if sys.version_info[0] == 3:

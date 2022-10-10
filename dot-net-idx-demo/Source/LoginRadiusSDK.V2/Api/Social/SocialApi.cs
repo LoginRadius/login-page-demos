@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using LoginRadiusSDK.V2.Common;
+using System.Threading.Tasks;
 using LoginRadiusSDK.V2.Util;
 using LoginRadiusSDK.V2.Models.ResponseModels;
 using LoginRadiusSDK.V2.Models.ResponseModels.OtherObjects;
@@ -25,7 +26,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response containing Definition of Complete Token data</returns>
         /// 20.1
 
-        public ApiResponse<AccessToken> ExchangeAccessToken(string token)
+        public async Task<ApiResponse<AccessToken>> ExchangeAccessToken(string token)
         {
             if (string.IsNullOrWhiteSpace(token))
             {
@@ -39,17 +40,19 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/access_token";
             
-            return ConfigureAndExecute<AccessToken>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<AccessToken>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// The Refresh Access Token API is used to refresh the provider access token after authentication. It will be valid for up to 60 days on LoginRadius depending on the provider. In order to use the access token in other APIs, always refresh the token using this API.<br><br><b>Supported Providers :</b> Facebook,Yahoo,Google,Twitter, Linkedin.<br><br> Contact LoginRadius support team to enable this API.
         /// </summary>
         /// <param name="accessToken">Uniquely generated identifier key by LoginRadius that is activated after successful authentication.</param>
-        /// <param name="expiresIn">Allows you to specify a desired expiration time in minutes for the newly issued access_token.</param>
+        /// <param name="expiresIn">Allows you to specify a desired expiration time in minutes for the newly issued access token.</param>
+        /// <param name="isWeb">Is web or not.</param>
         /// <returns>Response containing Definition of Complete Token data</returns>
         /// 20.2
 
-        public ApiResponse<AccessToken> RefreshAccessToken(string accessToken, int? expiresIn = 0)
+        public async Task<ApiResponse<AccessToken>> RefreshAccessToken(string accessToken, int? expiresIn = 0,
+        bool isWeb = false)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -64,10 +67,14 @@ namespace LoginRadiusSDK.V2.Api.Social
             {
                queryParameters.Add("expiresIn", expiresIn.ToString());
             }
+            if (isWeb != false)
+            {
+               queryParameters.Add("isWeb", isWeb.ToString());
+            }
 
             var resourcePath = "api/v2/access_token/refresh";
             
-            return ConfigureAndExecute<AccessToken>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<AccessToken>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// This API validates access token, if valid then returns a response with its expiry otherwise error.
@@ -76,7 +83,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response containing Definition of Complete Token data</returns>
         /// 20.9
 
-        public ApiResponse<AccessToken> ValidateAccessToken(string accessToken)
+        public async Task<ApiResponse<AccessToken>> ValidateAccessToken(string accessToken)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -91,7 +98,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/access_token/validate";
             
-            return ConfigureAndExecute<AccessToken>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<AccessToken>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// This api invalidates the active access token or expires an access token validity.
@@ -100,7 +107,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response containing Definition for Complete Validation data</returns>
         /// 20.10
 
-        public ApiResponse<PostMethodResponse> InValidateAccessToken(string accessToken)
+        public async Task<ApiResponse<PostMethodResponse>> InValidateAccessToken(string accessToken)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -115,7 +122,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/access_token/invalidate";
             
-            return ConfigureAndExecute<PostMethodResponse>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<PostMethodResponse>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// This api is use to get all active session by Access Token.
@@ -124,7 +131,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response containing Definition for Complete active sessions</returns>
         /// 20.11.1
 
-        public ApiResponse<UserActiveSession> GetActiveSession(string token)
+        public async Task<ApiResponse<UserActiveSession>> GetActiveSession(string token)
         {
             if (string.IsNullOrWhiteSpace(token))
             {
@@ -139,7 +146,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/access_token/activesession";
             
-            return ConfigureAndExecute<UserActiveSession>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<UserActiveSession>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// This api is used to get all active sessions by AccountID(UID).
@@ -148,7 +155,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response containing Definition for Complete active sessions</returns>
         /// 20.11.2
 
-        public ApiResponse<UserActiveSession> GetActiveSessionByAccountID(string accountId)
+        public async Task<ApiResponse<UserActiveSession>> GetActiveSessionByAccountID(string accountId)
         {
             if (string.IsNullOrWhiteSpace(accountId))
             {
@@ -163,7 +170,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/access_token/activesession";
             
-            return ConfigureAndExecute<UserActiveSession>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<UserActiveSession>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// This api is used to get all active sessions by ProfileId.
@@ -172,7 +179,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response containing Definition for Complete active sessions</returns>
         /// 20.11.3
 
-        public ApiResponse<UserActiveSession> GetActiveSessionByProfileID(string profileId)
+        public async Task<ApiResponse<UserActiveSession>> GetActiveSessionByProfileID(string profileId)
         {
             if (string.IsNullOrWhiteSpace(profileId))
             {
@@ -187,7 +194,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/access_token/activesession";
             
-            return ConfigureAndExecute<UserActiveSession>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<UserActiveSession>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// <b>Supported Providers:</b> Facebook, Google, Live, Vkontakte.<br><br> This API returns the photo albums associated with the passed in access tokens Social Profile.
@@ -196,7 +203,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response Containing List of Album Data</returns>
         /// 22.2.1
 
-        public ApiResponse<List<Album>> GetAlbums(string accessToken)
+        public async Task<ApiResponse<List<Album>>> GetAlbums(string accessToken)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -209,7 +216,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/album";
             
-            return ConfigureAndExecute<List<Album>>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<List<Album>>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// <b>Supported Providers:</b> Facebook, Google, Live, Vkontakte.<br><br> This API returns the photo albums associated with the passed in access tokens Social Profile.
@@ -219,7 +226,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response Model containing Albums with next cursor</returns>
         /// 22.2.2
 
-        public ApiResponse<CursorResponse<Album>> GetAlbumsWithCursor(string accessToken, string nextCursor)
+        public async Task<ApiResponse<CursorResponse<Album>>> GetAlbumsWithCursor(string accessToken, string nextCursor)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -237,7 +244,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/album";
             
-            return ConfigureAndExecute<CursorResponse<Album>>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<CursorResponse<Album>>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// The Audio API is used to get audio files data from the user's social account.<br><br><b>Supported Providers:</b> Live, Vkontakte
@@ -246,7 +253,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response Containing List of Audio Data</returns>
         /// 24.2.1
 
-        public ApiResponse<List<Audio>> GetAudios(string accessToken)
+        public async Task<ApiResponse<List<Audio>>> GetAudios(string accessToken)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -259,7 +266,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/audio";
             
-            return ConfigureAndExecute<List<Audio>>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<List<Audio>>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// The Audio API is used to get audio files data from the user's social account.<br><br><b>Supported Providers:</b> Live, Vkontakte
@@ -269,7 +276,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response Model containing Audio with next cursor</returns>
         /// 24.2.2
 
-        public ApiResponse<CursorResponse<Audio>> GetAudiosWithCursor(string accessToken, string nextCursor)
+        public async Task<ApiResponse<CursorResponse<Audio>>> GetAudiosWithCursor(string accessToken, string nextCursor)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -287,7 +294,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/audio";
             
-            return ConfigureAndExecute<CursorResponse<Audio>>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<CursorResponse<Audio>>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// The Check In API is used to get check Ins data from the user's social account.<br><br><b>Supported Providers:</b> Facebook, Foursquare, Vkontakte
@@ -296,7 +303,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response Containing List of CheckIn Data</returns>
         /// 25.2.1
 
-        public ApiResponse<List<CheckIn>> GetCheckIns(string accessToken)
+        public async Task<ApiResponse<List<CheckIn>>> GetCheckIns(string accessToken)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -309,7 +316,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/checkin";
             
-            return ConfigureAndExecute<List<CheckIn>>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<List<CheckIn>>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// The Check In API is used to get check Ins data from the user's social account.<br><br><b>Supported Providers:</b> Facebook, Foursquare, Vkontakte
@@ -319,7 +326,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response Model containing Checkins with next cursor</returns>
         /// 25.2.2
 
-        public ApiResponse<CursorResponse<CheckIn>> GetCheckInsWithCursor(string accessToken, string nextCursor)
+        public async Task<ApiResponse<CursorResponse<CheckIn>>> GetCheckInsWithCursor(string accessToken, string nextCursor)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -337,7 +344,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/checkin";
             
-            return ConfigureAndExecute<CursorResponse<CheckIn>>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<CursorResponse<CheckIn>>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// The Contact API is used to get contacts/friends/connections data from the user's social account.This is one of the APIs that makes up the LoginRadius Friend Invite System. The data will normalized into LoginRadius' standard data format. This API requires setting permissions in your LoginRadius Dashboard. <br><br><b>Note:</b> Facebook restricts access to the list of friends that is returned. When using the Contacts API with Facebook you will only receive friends that have accepted some permissions with your app. <br><br><b>Supported Providers:</b> Facebook, Foursquare, Google, LinkedIn, Live, Twitter, Vkontakte, Yahoo
@@ -347,7 +354,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response containing Definition of Contact Data with Cursor</returns>
         /// 27.1
 
-        public ApiResponse<CursorResponse<Contact>> GetContacts(string accessToken, string nextCursor = "")
+        public async Task<ApiResponse<CursorResponse<Contact>>> GetContacts(string accessToken, string nextCursor = "")
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -364,7 +371,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/contact";
             
-            return ConfigureAndExecute<CursorResponse<Contact>>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<CursorResponse<Contact>>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// The Event API is used to get the event data from the user's social account.<br><br><b>Supported Providers:</b> Facebook, Live
@@ -373,7 +380,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response Containing List of Events Data</returns>
         /// 28.2.1
 
-        public ApiResponse<List<Events>> GetEvents(string accessToken)
+        public async Task<ApiResponse<List<Events>>> GetEvents(string accessToken)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -386,7 +393,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/event";
             
-            return ConfigureAndExecute<List<Events>>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<List<Events>>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// The Event API is used to get the event data from the user's social account.<br><br><b>Supported Providers:</b> Facebook, Live
@@ -396,7 +403,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response Model containing Events with next cursor</returns>
         /// 28.2.2
 
-        public ApiResponse<CursorResponse<Events>> GetEventsWithCursor(string accessToken, string nextCursor)
+        public async Task<ApiResponse<CursorResponse<Events>>> GetEventsWithCursor(string accessToken, string nextCursor)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -414,7 +421,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/event";
             
-            return ConfigureAndExecute<CursorResponse<Events>>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<CursorResponse<Events>>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// Get the following user list from the user's social account.<br><br><b>Supported Providers:</b> Twitter
@@ -423,7 +430,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response Containing List of Contacts Data</returns>
         /// 29.2.1
 
-        public ApiResponse<List<Contact>> GetFollowings(string accessToken)
+        public async Task<ApiResponse<List<Contact>>> GetFollowings(string accessToken)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -436,7 +443,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/following";
             
-            return ConfigureAndExecute<List<Contact>>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<List<Contact>>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// Get the following user list from the user's social account.<br><br><b>Supported Providers:</b> Twitter
@@ -446,7 +453,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response containing Definition of Contact Data with Cursor</returns>
         /// 29.2.2
 
-        public ApiResponse<CursorResponse<Contact>> GetFollowingsWithCursor(string accessToken, string nextCursor)
+        public async Task<ApiResponse<CursorResponse<Contact>>> GetFollowingsWithCursor(string accessToken, string nextCursor)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -464,7 +471,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/following";
             
-            return ConfigureAndExecute<CursorResponse<Contact>>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<CursorResponse<Contact>>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// The Group API is used to get group data from the user's social account.<br><br><b>Supported Providers:</b> Facebook, Vkontakte
@@ -473,7 +480,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response Containing List of Groups Data</returns>
         /// 30.2.1
 
-        public ApiResponse<List<Group>> GetGroups(string accessToken)
+        public async Task<ApiResponse<List<Group>>> GetGroups(string accessToken)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -486,7 +493,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/group";
             
-            return ConfigureAndExecute<List<Group>>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<List<Group>>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// The Group API is used to get group data from the user's social account.<br><br><b>Supported Providers:</b> Facebook, Vkontakte
@@ -496,7 +503,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response Model containing Groups with next cursor</returns>
         /// 30.2.2
 
-        public ApiResponse<CursorResponse<Group>> GetGroupsWithCursor(string accessToken, string nextCursor)
+        public async Task<ApiResponse<CursorResponse<Group>>> GetGroupsWithCursor(string accessToken, string nextCursor)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -514,7 +521,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/group";
             
-            return ConfigureAndExecute<CursorResponse<Group>>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<CursorResponse<Group>>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// The Like API is used to get likes data from the user's social account.<br><br><b>Supported Providers:</b> Facebook
@@ -523,7 +530,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response Containing List of Likes Data</returns>
         /// 31.2.1
 
-        public ApiResponse<List<Like>> GetLikes(string accessToken)
+        public async Task<ApiResponse<List<Like>>> GetLikes(string accessToken)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -536,7 +543,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/like";
             
-            return ConfigureAndExecute<List<Like>>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<List<Like>>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// The Like API is used to get likes data from the user's social account.<br><br><b>Supported Providers:</b> Facebook
@@ -546,7 +553,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response Model containing Likes with next cursor</returns>
         /// 31.2.2
 
-        public ApiResponse<CursorResponse<Like>> GetLikesWithCursor(string accessToken, string nextCursor)
+        public async Task<ApiResponse<CursorResponse<Like>>> GetLikesWithCursor(string accessToken, string nextCursor)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -564,7 +571,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/like";
             
-            return ConfigureAndExecute<CursorResponse<Like>>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<CursorResponse<Like>>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// The Mention API is used to get mentions data from the user's social account.<br><br><b>Supported Providers:</b> Twitter
@@ -573,7 +580,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response Containing List of Status Data</returns>
         /// 32.1
 
-        public ApiResponse<List<Status>> GetMentions(string accessToken)
+        public async Task<ApiResponse<List<Status>>> GetMentions(string accessToken)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -586,7 +593,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/mention";
             
-            return ConfigureAndExecute<List<Status>>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<List<Status>>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// Post Message API is used to post messages to the user's contacts.<br><br><b>Supported Providers:</b> Twitter, LinkedIn <br><br>The Message API is used to post messages to the user?s contacts. This is one of the APIs that makes up the LoginRadius Friend Invite System. After using the Contact API, you can send messages to the retrieved contacts. This API requires setting permissions in your LoginRadius Dashboard.<br><br>GET & POST Message API work the same way except the API method is different
@@ -598,7 +605,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response containing Definition for Complete Validation data</returns>
         /// 33.1
 
-        public ApiResponse<PostMethodResponse> PostMessage(string accessToken, string message,
+        public async Task<ApiResponse<PostMethodResponse>> PostMessage(string accessToken, string message,
         string subject, string to)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
@@ -627,7 +634,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/message";
             
-            return ConfigureAndExecute<PostMethodResponse>(HttpMethod.POST, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<PostMethodResponse>(HttpMethod.POST, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// The Page API is used to get the page data from the user's social account.<br><br><b>Supported Providers:</b>  Facebook, LinkedIn
@@ -637,7 +644,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response containing Definition of Complete page data</returns>
         /// 34.1
 
-        public ApiResponse<Page> GetPage(string accessToken, string pageName)
+        public async Task<ApiResponse<Page>> GetPage(string accessToken, string pageName)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -655,7 +662,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/page";
             
-            return ConfigureAndExecute<Page>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<Page>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// The Photo API is used to get photo data from the user's social account.<br><br><b>Supported Providers:</b>  Facebook, Foursquare, Google, Live, Vkontakte
@@ -665,7 +672,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response Containing List of Photos Data</returns>
         /// 35.1
 
-        public ApiResponse<List<Photo>> GetPhotos(string accessToken, string albumId)
+        public async Task<ApiResponse<List<Photo>>> GetPhotos(string accessToken, string albumId)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -683,7 +690,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/photo";
             
-            return ConfigureAndExecute<List<Photo>>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<List<Photo>>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// The Post API is used to get post message data from the user's social account.<br><br><b>Supported Providers:</b>  Facebook
@@ -692,7 +699,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response Containing List of Posts Data</returns>
         /// 36.1
 
-        public ApiResponse<List<Post>> GetPosts(string accessToken)
+        public async Task<ApiResponse<List<Post>>> GetPosts(string accessToken)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -705,7 +712,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/post";
             
-            return ConfigureAndExecute<List<Post>>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<List<Post>>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// The Status API is used to update the status on the user's wall.<br><br><b>Supported Providers:</b>  Facebook, Twitter, LinkedIn
@@ -721,7 +728,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response conatining Definition of Validation and Short URL data</returns>
         /// 37.2
 
-        public ApiResponse<PostMethodResponse<ShortUrlResponse>> StatusPosting(string accessToken, string caption,
+        public async Task<ApiResponse<PostMethodResponse<ShortUrlResponse>>> StatusPosting(string accessToken, string caption,
         string description, string imageUrl, string status, string title, string url,
         string shorturl = "0")
         {
@@ -770,7 +777,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/status";
             
-            return ConfigureAndExecute<PostMethodResponse<ShortUrlResponse>>(HttpMethod.POST, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<PostMethodResponse<ShortUrlResponse>>(HttpMethod.POST, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// The Trackable status API works very similar to the Status API but it returns a Post id that you can use to track the stats(shares, likes, comments) for a specific share/post/status update. This API requires setting permissions in your LoginRadius Dashboard.<br><br> The Trackable Status API is used to update the status on the user's wall and return an Post ID value. It is commonly referred to as Permission based sharing or Push notifications.<br><br> POST Input Parameter Format: application/x-www-form-urlencoded
@@ -780,7 +787,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response containing Definition for Complete status data</returns>
         /// 37.6
 
-        public ApiResponse<StatusUpdateResponse> TrackableStatusPosting(string accessToken, StatusModel statusModel)
+        public async Task<ApiResponse<StatusUpdateResponse>> TrackableStatusPosting(string accessToken, StatusModel statusModel)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -797,7 +804,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/status/trackable";
             
-            return ConfigureAndExecute<StatusUpdateResponse>(HttpMethod.POST, resourcePath, queryParameters, ConvertToJson(statusModel));
+            return await ConfigureAndExecute<StatusUpdateResponse>(HttpMethod.POST, resourcePath, queryParameters, ConvertToJson(statusModel));
         }
         /// <summary>
         /// The Trackable status API works very similar to the Status API but it returns a Post id that you can use to track the stats(shares, likes, comments) for a specific share/post/status update. This API requires setting permissions in your LoginRadius Dashboard.<br><br> The Trackable Status API is used to update the status on the user's wall and return an Post ID value. It is commonly referred to as Permission based sharing or Push notifications.
@@ -812,7 +819,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response containing Definition for Complete status data</returns>
         /// 37.7
 
-        public ApiResponse<StatusUpdateResponse> GetTrackableStatusStats(string accessToken, string caption,
+        public async Task<ApiResponse<StatusUpdateResponse>> GetTrackableStatusStats(string accessToken, string caption,
         string description, string imageUrl, string status, string title, string url)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
@@ -856,7 +863,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/status/trackable/js";
             
-            return ConfigureAndExecute<StatusUpdateResponse>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<StatusUpdateResponse>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// The Trackable status API works very similar to the Status API but it returns a Post id that you can use to track the stats(shares, likes, comments) for a specific share/post/status update. This API requires setting permissions in your LoginRadius Dashboard.<br><br> This API is used to retrieve a tracked post based on the passed in post ID value. This API requires setting permissions in your LoginRadius Dashboard.<br><br> <b>Note:</b> To utilize this API you need to find the ID for the post you want to track, which might require using Trackable Status Posting API first.
@@ -865,7 +872,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response containing Definition of Complete Status Update data</returns>
         /// 37.8
 
-        public ApiResponse<StatusUpdateStats> TrackableStatusFetching(string postId)
+        public async Task<ApiResponse<StatusUpdateStats>> TrackableStatusFetching(string postId)
         {
             if (string.IsNullOrWhiteSpace(postId))
             {
@@ -879,34 +886,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/status/trackable";
             
-            return ConfigureAndExecute<StatusUpdateStats>(HttpMethod.GET, resourcePath, queryParameters, null);
-        }
-        /// <summary>
-        /// The User Profile API is used to get social profile data from the user's social account after authentication.<br><br><b>Supported Providers:</b>  All
-        /// </summary>
-        /// <param name="accessToken">Uniquely generated identifier key by LoginRadius that is activated after successful authentication.</param>
-        /// <param name="fields">The fields parameter filters the API response so that the response only includes a specific set of fields</param>
-        /// <returns>Response containing Definition for Complete UserProfile data</returns>
-        /// 38.1
-
-        public ApiResponse<UserProfile> GetSocialUserProfile(string accessToken, string fields = "")
-        {
-            if (string.IsNullOrWhiteSpace(accessToken))
-            {
-               throw new ArgumentException(BaseConstants.ValidationMessage, nameof(accessToken));
-            }
-            var queryParameters = new QueryParameters
-            {
-                { "access_token", accessToken }
-            };
-            if (!string.IsNullOrWhiteSpace(fields))
-            {
-               queryParameters.Add("fields", fields);
-            }
-
-            var resourcePath = "api/v2/userprofile";
-            
-            return ConfigureAndExecute<UserProfile>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<StatusUpdateStats>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// The User Profile API is used to get the latest updated social profile data from the user's social account after authentication. The social profile will be retrieved via oAuth and OpenID protocols. The data is normalized into LoginRadius' standard data format. This API should be called using the access token retrieved from the refresh access token API.
@@ -916,7 +896,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response containing Definition for Complete UserProfile data</returns>
         /// 38.2
 
-        public ApiResponse<UserProfile> GetRefreshedSocialUserProfile(string accessToken, string fields = "")
+        public async Task<ApiResponse<UserProfile>> GetRefreshedSocialUserProfile(string accessToken, string fields = "")
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -933,7 +913,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/userprofile/refresh";
             
-            return ConfigureAndExecute<UserProfile>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<UserProfile>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
         /// <summary>
         /// The Video API is used to get video files data from the user's social account.<br><br><b>Supported Providers:</b>   Facebook, Google, Live, Vkontakte
@@ -943,7 +923,7 @@ namespace LoginRadiusSDK.V2.Api.Social
         /// <returns>Response containing Definition of Video Data with Cursor</returns>
         /// 39.2
 
-        public ApiResponse<CursorResponse<Video>> GetVideos(string accessToken, string nextCursor)
+        public async Task<ApiResponse<CursorResponse<Video>>> GetVideos(string accessToken, string nextCursor)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -961,7 +941,7 @@ namespace LoginRadiusSDK.V2.Api.Social
 
             var resourcePath = "api/v2/video";
             
-            return ConfigureAndExecute<CursorResponse<Video>>(HttpMethod.GET, resourcePath, queryParameters, null);
+            return await ConfigureAndExecute<CursorResponse<Video>>(HttpMethod.GET, resourcePath, queryParameters, null);
         }
     }
 }

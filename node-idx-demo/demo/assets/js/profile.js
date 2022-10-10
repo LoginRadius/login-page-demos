@@ -23,7 +23,7 @@ let profileUpdate = function () {
   }
 
   $.ajax({
-    url: domainName + "/../ajax_handler/login",
+    url: domainName + "/ajax_handler/login",
     type: 'POST',
     dataType: "json",
     data: $.param({
@@ -90,7 +90,6 @@ function handleUpdateAccount() {
           $("#user-updateaccount-errorMsg").text(res.message);
         } else if (res.status == 'success') {
           $("#user-updateaccount-successMsg").text(res.message);
-          getProfileByUid();
         }
       },
       error: function (xhr, status, error) {

@@ -51,7 +51,11 @@ public class LoginRadiusService {
 
 	public String getUserProfile(HttpServletRequest request) {
 		AuthenticationApi auth = new AuthenticationApi();
-		auth.getProfileByAccessToken(request.getParameter("token"), null, new AsyncHandler<Identity>() {
+		String fields = null; //Optional
+		String emailTemplate = ""; //Optional
+		String verificationUrl = ""; //Optional
+		String welcomeEmailTemplate = ""; //Optional
+		auth.getProfileByAccessToken(request.getParameter("token"), fields, emailTemplate, verificationUrl, welcomeEmailTemplate, new AsyncHandler<Identity>() {
 			@Override
 			public void onSuccess(Identity arg0) {
 				// TODO Auto-generated method stub
