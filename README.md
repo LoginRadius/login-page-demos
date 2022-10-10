@@ -13,7 +13,6 @@ This repository contains the sample login page demo web application created usin
 * Change Password
 * Update Account
 
-==========
 
 ![Home Image](http://docs.lrcontent.com/resources/github/banner-1544x500.png)
 
@@ -26,6 +25,6 @@ This document contains information and examples regarding the LoginRadius SDK im
 
 ## Configuration
 
-1. Clone the repository from the source.
-2. You can go to any directory you want to work with.
-3. In the respective tech stack folder you can find the instructions to run the demo
+- Clone the repository from the source.
+- You can go to any directory you want to work with.
+- In the respective tech stack folder you can find the instructions to run the demo
