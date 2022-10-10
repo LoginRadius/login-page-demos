@@ -1,5 +1,18 @@
+# LoginRadius Login Page (Identity Experience Framework) Demos
 
-LoginRadius SDK USING IDX 
+
+## About 
+
+This repository contains the sample login page demo web application created using the different tech stack and LoginRadius IDX framework. The following features are included in the demo:
+
+* Login with IDX
+* Registration with IDX
+* Email Verification
+* Forgot Password
+* Reset Password
+* Change Password
+* Update Account
+
 ==========
 
 ![Home Image](http://docs.lrcontent.com/resources/github/banner-1544x500.png)
@@ -10,18 +23,6 @@ LoginRadius SDK created in different technologies can be used to leverage the CI
 LoginRadius empowers businesses to deliver a delightful customer experience and win customer trust. Using the LoginRadius Identity Platform, you can offer a streamlined registration and login processes while protecting customer accounts and complying with data privacy regulations.
 
 This document contains information and examples regarding the LoginRadius SDK implementation with LoginRadius IDX.
-
-# Demo
-
-A demo web application using the different tech stack and LoginRadius IDX framework. The following features are included:
-
-* Login with IDX
-* Registration with IDX
-* Email Verification
-* Forgot Password
-* Reset Password
-* Change Password
-* Update Account
 
 ## Configuration
 
