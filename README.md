@@ -1,7 +1,7 @@
 # LoginRadius Login Page (Identity Experience Framework) Demos
 
 
-## About 
+## About LoginRadius
 
 This repository contains the sample login page demo web application created using the different tech stack and LoginRadius IDX framework. The following features are included in the demo:
 
